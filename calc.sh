@@ -8,8 +8,8 @@
 ##############              Abdallah Mohamed Ahmed Abdel Gawwad        #############################
 ##############              Ahmed Ibrahim Abdelmotaleb Rashed          #############################
 ##############              Ashraf AbdelSattar Soliman                 #############################
-##############              version 1.1                                #############################
-##############               15/10/2023                                #############################
+##############              version 1.3                                #############################
+##############               22/10/2023                                #############################
 ####################################################################################################
 #--------------------------------------------------------------------------------------------------#
 
@@ -24,12 +24,6 @@ Invalid_input(){
     whiptail --title "Invalid Input" --msgbox "Please enter valid number" 10 50
 }
 
-
-# Function to perform programmer calculations
-programmer_calculation() {
-    result=$(echo "$1" | bc -l)
-    echo "ibase=16; obase=10; $result" | bc
-}
 
 #dashboard menu function
 dashboard(){
@@ -296,6 +290,12 @@ decimal_to_binary(){
 
 #hex to decimal function
 hex_to_decimal(){
+    result=0
+    local -A hexValues=(
+        [0]=0 [1]=1 [2]=2 [3]=3 [4]=4 [5]=5 [6]=6 [7]=7 [8]=8 [9]=9
+        [A]=10 [B]=11 [C]=12 [D]=13 [E]=14 [F]=15
+        [a]=10 [b]=11 [c]=12 [d]=13 [e]=14 [f]=15
+    )
     hex_number=$(whiptail --title "Hexadecimal to Decimal" --inputbox "Enter a hexadecimal number (1-F upper cases):" 10 50 3>&1 1>&2 2>&3)
     exitstatus=$?
     if [ $exitstatus = 0 ]; then
@@ -303,8 +303,16 @@ hex_to_decimal(){
         then
             Invalid_input
             hex_to_decimal
-        else
-            result=$(programmer_calculation "ibase=16; $hex_number")
+        else      
+            for ((i = 0; i < ${#hex_number}; i++)); do
+                local char="${hex_number:i:1}"
+                if [[ ${hexValues[$char]+_} ]]; then
+                    local value=${hexValues[$char]}
+                    ((result = result * 16 + value))
+                    
+                fi
+            done
+            
             whiptail --title "Hexadecimal to Decimal Result" --msgbox "Result: $result" 10 50
             #repeat
             hex_to_decimal
