@@ -38,7 +38,7 @@ dashboard(){
 
 #function to call our names and credits
 credits(){
-    whiptail --title "Team" --msgbox "Eslam Fawzi Metwally\nAya Mohamed\nAbdallah Mohamed Ahmed Abdel Gawwad\nAhmed Ibrahim Abdelmotaleb Rashed\nAshraf AbdelSattar Soliman" 13 60
+    whiptail --title "Team" --msgbox "Simple Calculator\nBash Project ITI Ismailia Systam Administration\nOct 2023 Eng/Karim Abdelhamid\nEslam Fawzi Metwally\nAya Mohamed\nAbdallah Mohamed Ahmed Abdel Gawwad\nAhmed Ibrahim Abdelmotaleb Rashed\nAshraf AbdelSattar Soliman" 20 60
 }
 
 #--------------------------------------------------------------------------------#
@@ -51,7 +51,7 @@ add(){
     exitstatus=$?
     
     if [ $exitstatus = 0 ]; then
-        if [[ !($num1 =~ ^[0-9]+$) ]]
+        if [[ !($num1 =~ ^[0-9]*(\.[0-9]+)?$) ]]
         then
             Invalid_input
             add
@@ -60,13 +60,13 @@ add(){
             num2=$(whiptail --title "Addition" --inputbox "Enter the second number:" 10 50 3>&1 1>&2 2>&3)
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
-                if [[ !($num2 =~ ^[0-9]+$) ]]
+                if [[ !($num2 =~ ^[0-9]*(\.[0-9]+)?$) ]]
                 then
                     Invalid_input
                     add
                 else
                     
-                    result=$(($num1+$num2))
+                    result=$(echo $num1  $num2 | awk '{print $1+$2}')
                     whiptail --title "Addition Result" --msgbox "Result: $result" 10 50
                     #repeat
                     add
@@ -89,7 +89,7 @@ Subtraction(){
     exitstatus=$?
     
     if [ $exitstatus = 0 ]; then
-        if [[ !($num1 =~ ^[0-9]+$) ]]
+        if [[ !($num1 =~ ^[0-9]*(\.[0-9]+)?$) ]]
         then
             Invalid_input
             Subtraction
@@ -98,13 +98,13 @@ Subtraction(){
             num2=$(whiptail --title "Subtraction" --inputbox "Enter the second number:" 10 50 3>&1 1>&2 2>&3)
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
-                if [[ !($num2 =~ ^[0-9]+$) ]]
+                if [[ !($num2 =~ ^[0-9]*(\.[0-9]+)?$) ]]
                 then
                     Invalid_input
                     Subtraction
                 else
                     
-                    result=$(($num1-$num2))
+                    result=$(echo $num1  $num2 | awk '{print $1-$2}')
                     whiptail --title "Subtraction Result" --msgbox "Result: $result" 10 50
                     #repeat
                     Subtraction
@@ -126,7 +126,7 @@ Multiplication(){
     exitstatus=$?
     
     if [ $exitstatus = 0 ]; then
-        if [[ !($num1 =~ ^[0-9]+$) ]]
+        if [[ !($num1 =~ ^[0-9]*(\.[0-9]+)?$) ]]
         then
             Invalid_input
             Multiplication
@@ -135,13 +135,13 @@ Multiplication(){
             num2=$(whiptail --title "Multiplication" --inputbox "Enter the second number:" 10 50 3>&1 1>&2 2>&3)
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
-                if [[ !($num2 =~ ^[0-9]+$) ]]
+                if [[ !($num2 =~ ^[0-9]*(\.[0-9]+)?$) ]]
                 then
                     Invalid_input
                     Multiplication
                 else
                     
-                    result=$(($num1*$num2))
+                    result=$(echo $num1  $num2 | awk '{print $1*$2}')
                     whiptail --title "Multiplication Result" --msgbox "Result: $result" 10 50
                     #repeat
                     Multiplication
@@ -163,7 +163,7 @@ Division(){
     exitstatus=$?
     
     if [ $exitstatus = 0 ]; then
-        if [[ !($num1 =~ ^[0-9]+$) ]]
+        if [[ !($num1 =~ ^[0-9]*(\.[0-9]+)?$) ]]
         then
             Invalid_input
             Division
@@ -172,7 +172,7 @@ Division(){
             num2=$(whiptail --title "Division" --inputbox "Enter the divisor:" 10 50 3>&1 1>&2 2>&3)
             exitstatus=$?
             if [ $exitstatus = 0 ]; then
-                if [[ !($num2 =~ ^[0-9]+$) ]]
+                if [[ !($num2 =~ ^[0-9]*(\.[0-9]+)?$) ]]
                 then
                     Invalid_input
                     Division
@@ -181,7 +181,7 @@ Division(){
                         whiptail --title "Division Error" --msgbox "You cannot divide by zero!" 10 50
                         Division
                     else
-                        result=$(($num1/$num2))
+                        result=$(echo $num1  $num2 | awk '{print $1/$2}')
                         whiptail --title "Division Result" --msgbox "Result: $(printf "%.2f" $result)" 10 50
                         #repeat
                         Division
