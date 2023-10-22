@@ -15,6 +15,8 @@
 
 #This program simulates two modes of Pc's calculator (Standard & Programmer) as a Project in ITI Bash script course
 
+
+
 #functions of the code
 
 #Error function
@@ -238,9 +240,17 @@ binary_to_decimal(){
         then
             Invalid_input
             binary_to_decimal
-            
         else
-            result=$(programmer_calculation "ibase=2; $binary_number")
+            result=0
+            position=1
+            # Loop through the binary digits from right to left
+            for (( i=${#binary_number}-1; i>=0; i-- )); do
+                digit="${binary_number:$i:1}"
+                if [ "$digit" == "1" ]; then
+                    result=$(( result + position ))
+                fi
+                position=$(( position * 2 ))
+            done
             whiptail --title "Binary to Decimal Result" --msgbox "Result: $result" 10 50
             #repeat
             binary_to_decimal
@@ -255,6 +265,7 @@ binary_to_decimal(){
 decimal_to_binary(){
     decimal_number=$(whiptail --title "Decimal to Binary" --inputbox "Enter a decimal number:" 10 50 3>&1 1>&2 2>&3)
     exitstatus=$?
+    result=0
     if [ $exitstatus = 0 ]; then
         if [[ !($decimal_number =~ ^[0-9]+$) ]]
         then
@@ -262,7 +273,17 @@ decimal_to_binary(){
             decimal_to_binary
             
         else
-            result=$(programmer_calculation "obase=2; $decimal_number")
+            if [ $decimal_number = 0 ]; then
+                result=0
+            else
+                
+                while [ $decimal_number -gt 0 ]; do
+                    result=$((decimal_number % 2))$result
+                    decimal_number=$((decimal_number / 2))
+                done
+                result=${result%?}
+            fi
+            
             whiptail --title "Decimal to Binary Result" --msgbox "Result: $result" 10 50
             #repeat
             decimal_to_binary
@@ -298,6 +319,7 @@ hex_to_decimal(){
 decimal_to_hex(){
     decimal_number=$(whiptail --title "Decimal to Hexadecimal" --inputbox "Enter a decimal number:" 10 50 3>&1 1>&2 2>&3)
     exitstatus=$?
+    result=0
     if [ $exitstatus = 0 ]; then
         
         if [[ !($decimal_number =~ ^[0-9]+$) ]]
@@ -305,11 +327,28 @@ decimal_to_hex(){
             Invalid_input
             decimal_to_hex
         else
-            
-            result=$(programmer_calculation "obase=16; $decimal_number")
+            if [ $decimal_number = 0 ]; then
+                result=0
+            else
+                while [ "$decimal_number" -gt 0 ]; do
+                    remainder=$((decimal_number % 16))
+                    case $remainder in
+                        10) result="A$result" ;;
+                        11) result="B$result" ;;
+                        12) result="C$result" ;;
+                        13) result="D$result" ;;
+                        14) result="E$result" ;;
+                        15) result="F$result" ;;
+                        *) result="$remainder$result" ;;
+                    esac
+                    decimal_number=$((decimal_number / 16))
+                done
+                result=${result%?}
+            fi
             whiptail --title "Decimal to Hexadecimal Result" --msgbox "Result: $result" 10 50
             #return to prev menu
-            programmer_operation
+            decimal_to_hex
+            
         fi
     else
         #return to prev menu
